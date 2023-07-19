@@ -1,0 +1,18 @@
+# docker-compose file to set up grafana inside a docker
+# container port: 3000
+# host port: 3030
+
+version: '3'
+
+services:
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3030:3000
+    environment:
+      - GF_INSTALL_PLUGINS=agenty-flowcharting-panel
+    network_mode: bridge
+    #volumes:
+    #  - ./grafana:/etc/grafana
+    restart: always

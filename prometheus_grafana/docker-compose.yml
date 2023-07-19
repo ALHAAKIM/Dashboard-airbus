@@ -1,0 +1,52 @@
+# docker-compose for a prometheus client
+
+version: '3'
+
+services:
+  prom:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    # network_mode: bridge
+    networks:
+      - myNetwork
+    
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3030:3000
+    environment:
+      - GF_INSTALL_PLUGINS=agenty-flowcharting-panel
+    # network_mode: bridge
+    networks:
+      - myNetwork
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    restart: always
+
+  node-red:
+    image: nodered/node-red:latest
+    environment:
+      - TZ=Europe/Amsterdam
+    ports:
+      - "1880:1880"
+    networks:
+      - myNetwork
+    volumes:
+      - node-red-data:/var/lib/node-red
+
+networks:
+  myNetwork:
+    
+volumes:
+  node-red-data:
+    
+  grafana-storage:
+    external: true
+    
+    
